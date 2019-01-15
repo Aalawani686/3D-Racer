@@ -21,6 +21,7 @@ import javax.swing.Timer;
 public class Driver extends JPanel implements ActionListener, KeyListener {
 	int t_width = 800;
 	int t_height = 800;
+	int hello = 10;
 
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
