@@ -14,9 +14,11 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
 public class Driver extends JPanel implements ActionListener, KeyListener {
@@ -173,12 +175,15 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
 		f.setBackground(Color.BLACK);
-
+		JTextField username = new JTextField(20);
 		// setups icon image
+		
 		
 
 		f.setResizable(false);
 		f.addKeyListener(this);
+//		f.add(this);
+		
 		f.add(this);
 		t = new Timer(17, this);
 		t.start();

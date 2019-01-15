@@ -1,4 +1,5 @@
 import java.applet.Applet;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -68,9 +69,9 @@ public class Graficos extends JPanel {
 		int yBG = -100;
 		int xU = 312;
 		int yU = 660;
-		 Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
-		 Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
-		    
+		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
+		Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
+
 		g.drawImage(backg, xBG, yBG, this);
 		g.drawImage(userV, xU, yU, this);
 
@@ -83,14 +84,15 @@ public class Graficos extends JPanel {
 	// ==================code above ===========================
 
 	public static void main(String[] arg) {
-		JFrame frame= new JFrame("JavaTutorial.net");	
+		JFrame frame = new JFrame("JavaTutorial.net");
 		frame.getContentPane().add(new Graficos());
+
 		frame.setSize(800, 800);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);		
+		frame.setResizable(false);
+
 	}
-	
 
 	Timer t;
 }
