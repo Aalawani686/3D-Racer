@@ -61,6 +61,10 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int yBG = -230;
 	int xU = 312;
 	int yU = 660;
+	int BGw = 1000;
+	int BGh = 1000;
+	int xW = 175;
+	int xH = 116;
 	int maxView = 100;
 	public void paint(Graphics g) {
 		super.paintComponent(g);
@@ -73,8 +77,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 
 //		scaling
-		Image backg1 = backg.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); // scale background
-		Image userV1 = userV.getScaledInstance(175, 116, Image.SCALE_DEFAULT); // scale motorcycle
+		Image backg1 = backg.getScaledInstance(BGw, BGh, Image.SCALE_DEFAULT); // scale background
+		Image userV1 = userV.getScaledInstance(xW, xH, Image.SCALE_DEFAULT); // scale motorcycle
 		MediaTracker tracker = new MediaTracker(new java.awt.Container());
 		tracker.addImage(backg1, 0);
 		tracker.addImage(userV1, 0);
@@ -134,12 +138,20 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			}
 
 		}
-		 Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
-         g2d.translate(xU, yU); // Translate the center of our coordinates.
-         g2d.rotate(12);  // Rotate the image by 1 radian.
-         g2d.drawImage(userV1, 0, 0, 200, 200, this);
-		// System.out.println("pos: " + forwardPosition);
-//		g.drawImage(userV1, xU, yU, this);
+		Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
+        g2d.translate(xU+xW/2,yU -xH/2); // Translate the center of our coordinates.
+        		// System.out.println("pos: " + forwardPosition);
+		if(right) {
+			g2d.rotate(0.5);  // Rotate the image by 1 radian.
+	        g2d.drawImage(userV1, 0,xH/2, this);
+
+		}else if(left) {
+			g2d.rotate(-0.5);  // Rotate the image by 1 radian.
+	        g2d.drawImage(userV1, -xW,xH/2, this);
+
+		}else {
+		g.drawImage(userV1, -xW/2, xH/2, this);
+		}
 	}
 
 	public void update() {
@@ -181,8 +193,6 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public Driver() {
 
-		
-//		user.createAndShowGUI();
 		JFrame f = new JFrame();
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
@@ -199,6 +209,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+		
+		
 	}
 
 	Timer t;
@@ -228,8 +240,13 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		}
 		if (e.getKeyCode() == 40) {
 			down = true;
+		
+		}
+		if(e.getKeyCode() == 13) {
+			System.out.println("hello");
 			
 		}
+
 
 	}
 
@@ -252,7 +269,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			down = false;
 
 		}
-
+		
 	}
 
 	@Override
@@ -260,5 +277,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
+	 
+	       
 
 }
