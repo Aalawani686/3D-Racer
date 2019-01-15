@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -14,25 +15,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.Timer;
 import javax.swing.*;
 
 public class Driver extends JPanel implements ActionListener, KeyListener {
 	int t_width = 800;
 	int t_height = 800;
 	static boolean ready2go = false;
-
+	String test;
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
 	TextDemo user = new TextDemo();
-	
+
 	int trackWidth = t_width * 2;
 	int length;
 	int height;
@@ -66,6 +59,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int xW = 175;
 	int xH = 116;
 	int maxView = 100;
+	Font f = new Font("Helvetica", 15, 20);
+	long start = System.currentTimeMillis();
+
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		String src = new File("").getAbsolutePath() + "/src/";
@@ -73,8 +69,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
 
 		// user
-		 Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
-
+		Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
 
 //		scaling
 		Image backg1 = backg.getScaledInstance(BGw, BGh, Image.SCALE_DEFAULT); // scale background
@@ -87,8 +82,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		} catch (InterruptedException ex) {
 			throw new RuntimeException("Image loading interrupted", ex);
 		}
-		g.drawImage(backg1, xBG, yBG ,this);
-	
+		g.drawImage(backg1, xBG, yBG, this);
 
 		playerPoint = road.getPara(forwardPosition);
 		tangentAngle = road.getTanAngle(forwardPosition);
@@ -115,9 +109,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			height = (int) (t_height - (i - forwardPosition) * (width - 1));
 			g.setColor(Color.gray);
 			g.fillRect(
-					(int) ((t_width - length) / 2 - shift - lateralPosition*(maxView-(i-forwardPosition))
+					(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 							- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
-					height, length, 10); 
+					height, length, 10);
 
 			g.setColor(Color.black);
 			g.drawLine((int) (t_width / 2), t_height,
@@ -131,27 +125,35 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			if ((i - forwardPosition) % 20 <= 19 - (forwardPosition % 18)
 					&& (i - forwardPosition) % 20 >= 16 - (forwardPosition % 18)) {
 				g.fillRect(
-						(int) ((t_width / 2 - shift - lateralPosition*(maxView-(i-forwardPosition))
+						(int) ((t_width / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 								- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10))
 								- (50 - (i - forwardPosition) / 2) / 2),
 						height, (int) (50 - (i - forwardPosition) / 2), 10);
 			}
 
 		}
-		Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
-        g2d.translate(xU+xW/2,yU -xH/2); // Translate the center of our coordinates.
-        		// System.out.println("pos: " + forwardPosition);
-		if(right) {
-			g2d.rotate(0.5);  // Rotate the image by 1 radian.
-	        g2d.drawImage(userV1, 0,xH/2, this);
+		g.setColor(Color.BLACK);
+		g.drawRect(0, 0, 200, 100);
+		g.setColor(Color.GREEN);
+		g.setFont(f);
+		g.drawString("USER: " + getTest(), 10, 50);
+		g.drawString(timePrint(), 10, 70);
 
-		}else if(left) {
-			g2d.rotate(-0.5);  // Rotate the image by 1 radian.
-	        g2d.drawImage(userV1, -xW,xH/2, this);
+		Graphics2D g2d = (Graphics2D) g; // Create a Java2D version of g.
+		g2d.translate(xU + xW / 2, yU - xH / 2); // Translate the center of our coordinates.
+		// System.out.println("pos: " + forwardPosition);
+		if (right) {
+			g2d.rotate(0.5); // Rotate the image by 1 radian.
+			g2d.drawImage(userV1, 0, xH / 2, this);
 
-		}else {
-		g.drawImage(userV1, -xW/2, xH/2, this);
+		} else if (left) {
+			g2d.rotate(-0.5); // Rotate the image by 1 radian.
+			g2d.drawImage(userV1, -xW, xH / 2, this);
+
+		} else {
+			g.drawImage(userV1, -xW / 2, xH / 2, this);
 		}
+
 	}
 
 	public void update() {
@@ -187,9 +189,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public static void main(String[] arg) {
 		Driver d = new Driver();
-		
+
 	}
-	
 
 	public Driver() {
 
@@ -199,18 +200,16 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		f.setBackground(Color.BLACK);
 		f.add(this);
 		// setups icon image
-		
+
 		f.setResizable(false);
 		f.addKeyListener(this);
 //		f.add(this);
-		
-		
+
 		t = new Timer(17, this);
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
-		
-		
+
 	}
 
 	Timer t;
@@ -221,7 +220,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		// System.out.println(e.getKeyCode());
 		if (e.getKeyCode() == 39) {
 			right = true;
-			
+
 			if (xBG <= -10) {
 				xBG += 10;
 			}
@@ -235,18 +234,16 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		if (e.getKeyCode() == 38) {
 			up = true;
-			
-			
+
 		}
 		if (e.getKeyCode() == 40) {
 			down = true;
-		
-		}
-		if(e.getKeyCode() == 13) {
-			System.out.println("hello");
-			
-		}
 
+		}
+		if (e.getKeyCode() == 13) {
+			System.out.println("hello");
+
+		}
 
 	}
 
@@ -269,7 +266,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			down = false;
 
 		}
-		
+
 	}
 
 	@Override
@@ -277,7 +274,35 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
-	 
-	       
+
+	public String getTest() {
+		return test;
+	}
+
+	public void setTest(String test) {
+		this.test = test;
+	}
+
+	public String timePrint() {
+		if (((System.currentTimeMillis() - start) / 1000) <= 9) {
+			return ("Time: 00:0" + ((System.currentTimeMillis() - start) / 1000));
+		} else if (((System.currentTimeMillis() - start) / 1000) <= 59) {
+			return ("Time: 00:" + ((System.currentTimeMillis() - start) / 1000));
+		} else if (((System.currentTimeMillis() - start) / 1000) <= 599) {
+			if ((((System.currentTimeMillis() - start) / 1000)) % 60 <= 9) {
+				return ("Time: 0" + ((System.currentTimeMillis() - start) / 60000) + ":0"
+						+ (((System.currentTimeMillis() - start) / 1000)) % 60);
+			} else {
+				return ("Time: 0" + ((System.currentTimeMillis() - start) / 60000) + ":"
+						+ (((System.currentTimeMillis() - start) / 1000)) % 60);
+
+			}
+		} else {
+			return ("Time: " + ((System.currentTimeMillis() - start) / 60000) + ":"
+					+ (((System.currentTimeMillis() - start) / 1000)) % 60);
+		}
+
+	}
+//	else if (((System.currentTimeMillis() - start) / 1000) <= 3599)
 
 }

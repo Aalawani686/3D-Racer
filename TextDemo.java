@@ -39,8 +39,7 @@ public class TextDemo extends JPanel implements ActionListener {
 	protected JTextField textField;
 	protected JTextArea textArea;
 	private final static String newline = "\n";
-	static JButton button = new JButton("Let's Play!");
-
+	
 	public TextDemo() {
 		super(new GridBagLayout());
 
@@ -77,6 +76,7 @@ public class TextDemo extends JPanel implements ActionListener {
 			Driver.ready2go = true;
 		}
 		Driver d = new Driver();
+		d.setTest(text);
 		
 //      
 
@@ -98,9 +98,7 @@ public class TextDemo extends JPanel implements ActionListener {
 		// typical usage of BorderLayout.
 
 		frame.add(new TextDemo(), BorderLayout.LINE_START);
-		frame.add(button, BorderLayout.PAGE_END);
-
-	
+		
 
 
 
