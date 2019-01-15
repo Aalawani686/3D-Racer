@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -59,26 +60,25 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		super.paintComponent(g);
 		String src = new File("").getAbsolutePath() + "/src/";
 		// background
-		ImageIcon bg = new ImageIcon(src + background);
-		Image temp1 = bg.getImage();
+		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
 
 		// user
-		ImageIcon user = new ImageIcon(src + car);
-		Image temp2 = user.getImage();
+		 Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
+
 
 //		scaling
-		Image backg = temp1.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); // scale background
-		Image userV = temp2.getScaledInstance(175, 116, Image.SCALE_DEFAULT); // scale motorcycle
+//		Image backg = temp1.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); // scale background
+//		Image userV = temp2.getScaledInstance(175, 116, Image.SCALE_DEFAULT); // scale motorcycle
 		MediaTracker tracker = new MediaTracker(new java.awt.Container());
 		tracker.addImage(backg, 0);
-		tracker.addImage(userV, 0);
+//		tracker.addImage(userV, 0);
 		try {
 			tracker.waitForAll();
 		} catch (InterruptedException ex) {
 			throw new RuntimeException("Image loading interrupted", ex);
 		}
-
-		g.drawImage(backg, xBG, yBG, this);
+		g.drawImage(backg, 0, 0 ,this);
+	
 
 		playerPoint = road.getPara(forwardPosition);
 		tangentAngle = road.getTanAngle(forwardPosition);
@@ -129,7 +129,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		}
 		// System.out.println("pos: " + forwardPosition);
-		
+		g.drawImage(userV, 0, 0, this);
 	}
 
 	public void update() {
@@ -175,9 +175,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		f.setBackground(Color.BLACK);
 
 		// setups icon image
-		JLabel userview = new JLabel(new ImageIcon("UserView.png"));
-		userview.setBounds(100, 100, t_width, t_height);
-		f.add(userview);
+		
 
 		f.setResizable(false);
 		f.addKeyListener(this);
