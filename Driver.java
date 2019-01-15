@@ -18,8 +18,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import javax.swing.*;
 
 public class Driver extends JPanel implements ActionListener, KeyListener {
 	int t_width = 800;
@@ -28,7 +30,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
-
+	TextDemo user = new TextDemo();
+	
 	int trackWidth = t_width * 2;
 	int length;
 	int height;
@@ -167,7 +170,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public static void main(String[] arg) {
 		Driver d = new Driver();
+		
 	}
+	
 
 	public Driver() {
 
@@ -175,11 +180,10 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
 		f.setBackground(Color.BLACK);
-		JTextField username = new JTextField(20);
+		user.createAndShowGUI();
+		
 		// setups icon image
 		
-		
-
 		f.setResizable(false);
 		f.addKeyListener(this);
 //		f.add(this);
