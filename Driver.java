@@ -177,7 +177,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	public Driver() {
 
 		
-		user.createAndShowGUI();
+//		user.createAndShowGUI();
 		JFrame f = new JFrame();
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
