@@ -60,8 +60,6 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int yBG = -230;
 	int xU = 312;
 	int yU = 660;
-	
-	int maxView = 100;
 
 	public void paint(Graphics g) {
 		super.paintComponent(g);
@@ -93,7 +91,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		// System.out.println("angle difference: " + player.getPlayerAngle() + " " +
 		// tangentAngle);
 
-		for (int i = (int) (forwardPosition); i < forwardPosition + maxView; i++) {
+		for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
 
 			g.setColor(Color.black);
 			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
@@ -114,7 +112,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			g.fillRect(
 					(int) ((t_width - length) / 2 - shift - lateralPosition*(maxView-(i-forwardPosition))
 							- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
-					height, length, 10);
+					height, length, 10); 
 
 			g.setColor(Color.black);
 			g.drawLine((int) (t_width / 2), t_height,
