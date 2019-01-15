@@ -129,7 +129,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		}
 		// System.out.println("pos: " + forwardPosition);
-		g.drawImage(userV, xU, yU, this);
+		
 	}
 
 	public void update() {

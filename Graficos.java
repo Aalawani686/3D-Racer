@@ -32,7 +32,7 @@ public class Graficos extends JPanel {
 
 	// properties of this class - the panel that shows up
 	Color c = new Color(0, 0, 0);
-	String background = "Background.jpg";
+	String background = "DeathValley.jpg";
 	String car = "UserView.png";
 
 	// 1) Declare an array of Square objects here
@@ -44,33 +44,35 @@ public class Graficos extends JPanel {
 	// only do drawing for paint
 	public void paint(Graphics g) {
 		super.paintComponent(g);
-		String src = new File("").getAbsolutePath() + "/src/";
-		// background
-		ImageIcon bg = new ImageIcon(src + background);
-		Image temp1 = bg.getImage();
-		
-		// user
-		ImageIcon user = new ImageIcon(src + car);
-		Image temp2 = user.getImage();
-		
-//		scaling
-		Image backg = temp1.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); //scale background
-		Image userV = temp2.getScaledInstance(175, 116, Image.SCALE_DEFAULT); //scale motorcycle
-		MediaTracker tracker = new MediaTracker(new java.awt.Container());
-		tracker.addImage(backg,0);
-		tracker.addImage(userV,0);
-		try {
-		    tracker.waitForAll();
-		} catch (InterruptedException ex) {
-		    throw new RuntimeException("Image loading interrupted", ex);
-		}
+//		String src = new File("").getAbsolutePath() + "/src/";
+//		// background
+//		ImageIcon bg = new ImageIcon(src + background);
+//		Image temp1 = bg.getImage();
+//		
+//		// user
+//		ImageIcon user = new ImageIcon(src + car);
+//		Image temp2 = user.getImage();
+//		
+////		scaling
+//		Image backg = temp1.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); //scale background
+//		Image userV = temp2.getScaledInstance(175, 116, Image.SCALE_DEFAULT); //scale motorcycle
+//		MediaTracker tracker = new MediaTracker(new java.awt.Container());
+//		tracker.addImage(backg,0);
+//		tracker.addImage(userV,0);
+//		try {
+//		    tracker.waitForAll();
+//		} catch (InterruptedException ex) {
+//		    throw new RuntimeException("Image loading interrupted", ex);
+//		}
 		int xBG = -100;
 		int yBG = -100;
 		int xU = 312;
 		int yU = 660;
-
+		 Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
+		 Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
+		    
 		g.drawImage(backg, xBG, yBG, this);
-		g.drawImage(userV, xU, yU, null);
+		g.drawImage(userV, xU, yU, this);
 
 	}// end of paint method - put code above for anything dealing with drawing -
 
@@ -81,22 +83,14 @@ public class Graficos extends JPanel {
 	// ==================code above ===========================
 
 	public static void main(String[] arg) {
-		JFrame frame = new JFrame("JavaTutorial.net");
-		JButton	name = new JButton("Your name here");
-		Dimension nameSize = new Dimension(10,10);
-		frame.setBackground(Color.BLACK);
+		JFrame frame= new JFrame("JavaTutorial.net");	
 		frame.getContentPane().add(new Graficos());
-		JButton button = new JButton("...");
-		
-		button.setPreferredSize(nameSize);
-		frame.add(button);
-		frame.pack();
-	    frame.setVisible(true);
-
 		frame.setSize(800, 800);
+		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
+		frame.setResizable(false);		
 	}
+	
 
 	Timer t;
 }
