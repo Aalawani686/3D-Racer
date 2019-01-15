@@ -67,17 +67,17 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 
 //		scaling
-//		Image backg = temp1.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); // scale background
-//		Image userV = temp2.getScaledInstance(175, 116, Image.SCALE_DEFAULT); // scale motorcycle
+		Image backg1 = backg.getScaledInstance(1000, 1000, Image.SCALE_DEFAULT); // scale background
+		Image userV1 = userV.getScaledInstance(175, 116, Image.SCALE_DEFAULT); // scale motorcycle
 		MediaTracker tracker = new MediaTracker(new java.awt.Container());
-		tracker.addImage(backg, 0);
-//		tracker.addImage(userV, 0);
+		tracker.addImage(backg1, 0);
+		tracker.addImage(userV1, 0);
 		try {
 			tracker.waitForAll();
 		} catch (InterruptedException ex) {
 			throw new RuntimeException("Image loading interrupted", ex);
 		}
-		g.drawImage(backg, 0, 0 ,this);
+		g.drawImage(backg1, xBG, yBG ,this);
 	
 
 		playerPoint = road.getPara(forwardPosition);
@@ -129,7 +129,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		}
 		// System.out.println("pos: " + forwardPosition);
-		g.drawImage(userV, 0, 0, this);
+		g.drawImage(userV1, xU, yU, this);
 	}
 
 	public void update() {
