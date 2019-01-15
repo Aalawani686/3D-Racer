@@ -92,12 +92,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
 
-			g.setColor(Color.black);
-			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
-					(int) (road.getPara(i + 1).x + 700), (int) (-road.getPara(i + 1).y + 600));
-			g.setColor(Color.red);
-			g.drawRect((int) (road.getPara(forwardPosition).x + 700), (int) (-road.getPara(forwardPosition).y + 600),
-					30, 30);
+//			g.setColor(Color.black);
+//			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
+//					(int) (road.getPara(i + 1).x + 700), (int) (-road.getPara(i + 1).y + 600));
+//			g.setColor(Color.red);
+//			g.drawRect((int) (road.getPara(forwardPosition).x + 700), (int) (-road.getPara(forwardPosition).y + 600),
+//					30, 30);
 
 			drawingPoint = road.getPara(i);
 
@@ -136,7 +136,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		g.drawRect(0, 0, 200, 100);
 		g.setColor(Color.GREEN);
 		g.setFont(f);
-		g.drawString("USER: " + getTest(), 10, 50);
+		g.drawString("@" + getTest(), 10, 50);
 		g.drawString(timePrint(), 10, 70);
 
 		Graphics2D g2d = (Graphics2D) g; // Create a Java2D version of g.
@@ -250,19 +250,19 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getKeyCode() == 39) {
+		if (e.getKeyCode() == 39 || e.getKeyCode() == 68) {
 			right = false;
 
 		}
-		if (e.getKeyCode() == 37) {
+		if (e.getKeyCode() == 37 || e.getKeyCode() == 65) {
 			left = false;
 
 		}
-		if (e.getKeyCode() == 38) {
+		if (e.getKeyCode() == 38 || e.getKeyCode() == 87) {
 			up = false;
 
 		}
-		if (e.getKeyCode() == 40) {
+		if (e.getKeyCode() == 40 || e.getKeyCode() == 83) {
 			down = false;
 
 		}
