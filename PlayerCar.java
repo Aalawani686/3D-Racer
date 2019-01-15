@@ -15,7 +15,7 @@ public class PlayerCar {
 	}
 	
 	public double getLateralSpeed(Road road, double position) {
-		return 40*speed*Math.sin(getPlayerAngle()-road.getTanAngle(position));
+		return speed*Math.sin(getPlayerAngle()-road.getTanAngle(position));
 	}
 
 	public double getPlayerAngle() {

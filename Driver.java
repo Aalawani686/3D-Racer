@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
@@ -60,7 +61,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int yBG = -230;
 	int xU = 312;
 	int yU = 660;
-
+	int maxView = 100;
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		String src = new File("").getAbsolutePath() + "/src/";
@@ -133,8 +134,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			}
 
 		}
+		 Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
+         g2d.translate(xU, yU); // Translate the center of our coordinates.
+         g2d.rotate(12);  // Rotate the image by 1 radian.
+         g2d.drawImage(userV1, 0, 0, 200, 200, this);
 		// System.out.println("pos: " + forwardPosition);
-		g.drawImage(userV1, xU, yU, this);
+//		g.drawImage(userV1, xU, yU, this);
 	}
 
 	public void update() {
