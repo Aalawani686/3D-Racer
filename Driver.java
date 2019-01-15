@@ -110,7 +110,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			height = (int) (t_height - (i - forwardPosition) * (width - 1));
 			g.setColor(Color.gray);
 			g.fillRect(
-					(int) ((t_width - length) / 2 - shift - lateralPosition
+					(int) ((t_width - length) / 2 - shift - lateralPosition*(maxView-(i-forwardPosition))
 							- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
 					height, length, 10);
 
@@ -126,7 +126,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			if ((i - forwardPosition) % 20 <= 19 - (forwardPosition % 18)
 					&& (i - forwardPosition) % 20 >= 16 - (forwardPosition % 18)) {
 				g.fillRect(
-						(int) ((t_width / 2 - shift - lateralPosition
+						(int) ((t_width / 2 - shift - lateralPosition*(maxView-(i-forwardPosition))
 								- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10))
 								- (50 - (i - forwardPosition) / 2) / 2),
 						height, (int) (50 - (i - forwardPosition) / 2), 10);
