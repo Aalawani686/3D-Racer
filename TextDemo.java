@@ -41,7 +41,8 @@ public class TextDemo extends JPanel implements ActionListener {
     protected JTextField textField;
     protected JTextArea textArea;
     private final static String newline = "\n";
- 
+    JButton button; 
+   
     public TextDemo() {
         super(new GridBagLayout());
  
@@ -64,7 +65,8 @@ public class TextDemo extends JPanel implements ActionListener {
         c.weighty = 1.0;
         add(scrollPane, c);
     }
- 
+    
+    
     public void actionPerformed(ActionEvent evt) {
         String text = textField.getText();
         textArea.append(text + newline);
@@ -75,24 +77,42 @@ public class TextDemo extends JPanel implements ActionListener {
         if(textArea.getDocument().getLength() > 0) {
         Driver.ready2go = true;
         }
+        if(evt.getSource() == button) {
+        		button.setText("OK!");
+        }
+       
+    
+    
 
-    }
- 
+        
+        
+        
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
      * event dispatch thread.
      */
+    }
     static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Please Enter Your Username");
+       
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
+       
         //Add contents to the window.
-        frame.add(new TextDemo());
+        
+
+        //Make the center component big, since that's the
+        //typical usage of BorderLayout.
+        
+       
+        
+        
+        frame.add(new TextDemo(), BorderLayout.LINE_START);
+        
  
         //Display the window.
-        frame.pack();
+       frame.pack();
         frame.setVisible(true);
         
     }
