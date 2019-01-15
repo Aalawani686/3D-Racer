@@ -26,7 +26,7 @@ import javax.swing.*;
 public class Driver extends JPanel implements ActionListener, KeyListener {
 	int t_width = 800;
 	int t_height = 800;
-	
+	static boolean ready2go = false;
 
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
@@ -176,19 +176,20 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public Driver() {
 
+		
+		user.createAndShowGUI();
 		JFrame f = new JFrame();
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
 		f.setBackground(Color.BLACK);
-		user.createAndShowGUI();
-		
+		f.add(this);
 		// setups icon image
 		
 		f.setResizable(false);
 		f.addKeyListener(this);
 //		f.add(this);
 		
-		f.add(this);
+		
 		t = new Timer(17, this);
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
