@@ -13,6 +13,8 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,8 +26,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	String test;
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
-	TextDemo user = new TextDemo();
-
+	static String side = "";
+	static Server n;
 	int trackWidth = t_width * 2;
 	int length;
 	int height;
@@ -88,16 +90,22 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		// System.out.println("angle difference: " + player.getPlayerAngle() + " " +
 		// tangentAngle);
+		g.setColor(Color.WHITE);
+		g.drawString("Minimap", 600, 40);
 
+		g.fillRect(600, 50, 150, 100);
+		
+		g.setColor(Color.red);
+		g.drawRect((int) (700), (int) (100), 10, 10);
 		for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
-
-			g.setColor(Color.black);
-			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
-					(int) (road.getPara(i + 1).x + 700), (int) (-road.getPara(i + 1).y + 600));
-			g.setColor(Color.red);
-			g.drawRect((int) (road.getPara(forwardPosition).x + 700), (int) (-road.getPara(forwardPosition).y + 600),
-					30, 30);
-
+		
+			g.setColor(Color.BLACK);
+			
+			
+			g.drawLine((int) ((road.getPara(i).x / 10 + 700) - (int) road.getPara(forwardPosition).x / 10),
+					(int) (-road.getPara(i).y / 10 + 100 + (int) road.getPara(forwardPosition).y / 10),
+					(int) ((road.getPara(i + 1).x / 10 + 700) - (int) road.getPara(forwardPosition).x / 10),
+					(int) (-road.getPara(i + 1).y / 10 + 100) + (int) road.getPara(forwardPosition).y / 10);
 			drawingPoint = road.getPara(i);
 
 			shift = road.getShift(playerPoint, drawingPoint, forwardPosition);
@@ -158,34 +166,32 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public void update() {
 
-		if(up) {
+		if (up) {
 			player.accelerate();
-			//forwardPosition += 100;
+			// forwardPosition += 100;
 		}
-		if(!up) {
+		if (!up) {
 			player.deccelerate();
 		}
-		
+
 		forwardPosition += player.getForwardSpeed(road, forwardPosition);
 		lateralPosition += player.getLateralSpeed(road, forwardPosition);
-		
-		if(lateralPosition*maxView > trackWidth/2) {
+
+		if (lateralPosition * maxView > trackWidth / 2) {
 			player.onGrass();
-		}
-		else if(lateralPosition*maxView < -trackWidth/2) {
+		} else if (lateralPosition * maxView < -trackWidth / 2) {
 			player.onGrass();
-		}
-		else {
+		} else {
 			player.onRoad();
 		}
-		
-		if(left) {
+
+		if (left) {
 			player.subtractPlayerAngle();
 		}
-		if(right) {
+		if (right) {
 			player.addPlayerAngle();
 		}
-		System.out.println(player.getSpeed());
+//		System.out.println(player.getSpeed());
 
 	}
 
@@ -195,7 +201,18 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		repaint();
 	}
 
-	public static void main(String[] arg) {
+	public static void main(String[] arg) throws IOException {
+//		System.out.println("client or server");
+//		Scanner s = new Scanner(System.in);
+//		while (true) {
+//			if (side.equals("client") || side.equals("server")) {
+//				break;
+//			}
+//			side = s.nextLine();
+//		}
+//		n = new Server(side);
+//		Thread t1 = new Thread(n);
+//		t1.start();
 		Driver d = new Driver();
 
 	}
@@ -251,6 +268,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == 13) {
 			System.out.println("hello");
 
+		}
+		if (e.getKeyCode() == 32) {
+			n.send("pwoot");
 		}
 
 	}

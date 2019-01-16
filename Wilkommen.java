@@ -35,6 +35,7 @@ public class Wilkommen implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
         	if (credit.isEnabled()) {
         		Credits c = new Credits();
+        		
             }
         }
     });

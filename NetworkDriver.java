@@ -28,7 +28,7 @@ public class NetworkDriver extends JPanel implements ActionListener, KeyListener
 	int height;
 	int width = 5;
 	static String side = "";
-	static Network n;
+	static Server n;
 
 	double forwardPosition = 0;
 	double lateralPosition = 0;
@@ -134,17 +134,17 @@ public class NetworkDriver extends JPanel implements ActionListener, KeyListener
 	}
 	
 	public static void main(String[] arg) throws IOException {
-		System.out.println("client or server");
-		Scanner s = new Scanner(System.in);
-		while(true){
-			if(side.equals("client") || side.equals("server")){
-				break;
-			}
-			side = s.nextLine();
-		}
-		n = new Network(side);
-		Thread t1 = new Thread(n);
-		t1.start();
+//		System.out.println("client or server");
+//		Scanner s = new Scanner(System.in);
+//		while(true){
+//			if(side.equals("client") || side.equals("server")){
+//				break;
+//			}
+//			side = s.nextLine();
+//		}
+//		n = new Server(side);
+//		Thread t1 = new Thread(n);
+//		t1.start();
 		
 		Driver d = new Driver();
 	}
@@ -168,7 +168,7 @@ public class NetworkDriver extends JPanel implements ActionListener, KeyListener
 	public void keyPressed(KeyEvent e) {
 
 		
-		//System.out.println(e.getKeyCode());
+	System.out.println(e.getKeyCode());
 		if (e.getKeyCode() == 39) {
 			right = true;
 		}
@@ -176,15 +176,20 @@ public class NetworkDriver extends JPanel implements ActionListener, KeyListener
 			left = true;
 		}
 		
-		if (e.getKeyCode() == 38) {
+		if (e.getKeyCode() == 32) {
 			up = true;
 		}
 		if (e.getKeyCode() == 40) {
 			down = true;
 		}
-		if (e.getKeyCode() == 32){
-			n.send("HII");
+		if (e.getKeyCode() == 40){
+			n.send("pwoot");
+			System.out.println("hello");
 		}
+		if (e.getKeyCode() == 66){
+			n.send("l"+lateralPosition);
+		}
+		
 		
 	}
 
@@ -203,6 +208,7 @@ public class NetworkDriver extends JPanel implements ActionListener, KeyListener
 		if (e.getKeyCode() == 40) {
 			down = false;
 		}
+		
 		
 	}
 
