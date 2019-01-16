@@ -6,16 +6,17 @@ import javax.swing.*;
 public class Credits {
 	public Credits() {
 		JFrame f = new JFrame("hello");
-		JLabel Sahith = new JLabel("Sahith: Road Creation + Math");
+		JLabel Sahith = new JLabel("Sahith: Road Creation + Mechanics/Math");
 		JLabel Rudy = new JLabel("Rudy: GUI");
-		JLabel Andy = new JLabel("Andy: Networking");
+		JLabel Andy = new JLabel("Andy: Networking + Math");
 		JPanel p = new JPanel();
 		p.add(Sahith);
 		p.add(Rudy);
 		p.add(Andy);
+		
 		f.add(p);
 		f.setTitle("Driving Game");
-		f.setSize(200, 75);
+		f.setSize(200, 100);
 		f.setBackground(Color.BLACK);
 		// setups icon image
 
@@ -24,7 +25,7 @@ public class Credits {
 //		f.add(this);
 
 		
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
 	

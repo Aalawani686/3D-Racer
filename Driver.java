@@ -35,11 +35,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int trackWidth = t_width * 2;
 	int length;
 	int height;
+	int lapcount = 1;
 	int width = 5;
 	boolean onTheRoad = true;
 	double forwardPosition = 0;
 	double lateralPosition = 0;
-
+	boolean ender = true;
 	Point2D.Double playerPoint;
 	Point2D.Double drawingPoint;
 
@@ -117,11 +118,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			g.setColor(Color.BLACK);
 			g2d.setStroke(new BasicStroke(4));
 			g.drawRect(646, 6, 150, 100);
-			g.drawString("Lap" + " 1" + " of" + " 3", 676, 100);
+			g.drawString("Lap " + Integer.toString(lapcount) + " of" + " 3", 676, 100);
 			g2d.setStroke(new BasicStroke());
 			g.setFont(f);
 			g.setColor(Color.red);
 			g.drawRect((int) (748), (int) (65), 10, 10);
+			player.setAngleToRoad(road, forwardPosition);
 			for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
 
 				g.setColor(Color.black);
@@ -131,7 +133,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 						(int) (-road.getPara(i + 1).y / 10 + 65) + (int) road.getPara(forwardPosition).y / 10);
 				drawingPoint = road.getPara(i);
 
-				shift = road.getShift(playerPoint, drawingPoint, forwardPosition);
+				shift = road.getShift(playerPoint, drawingPoint, forwardPosition)*5;
 
 				// forwardPosition = (int)(forwardPosition);
 
@@ -141,25 +143,25 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				if (i == (int) forwardPosition + 97) {
 					g.fillRect(
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
-									- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
+									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
 							height, length, 10);
 
 					g.drawImage(finalLine,
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
-									- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
+									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
 							310, this);
 
 				} else {
 					g.fillRect(
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
-									- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10)),
+									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
 							height, length, 10);
 				}
 
 				g.setColor(Color.black);
 //			g.drawLine((int) (t_width / 2), t_height,
-//					t_width / 2 + (int) (100 * Math.sin((player.getPlayerAngle() - tangentAngle))),
-//					t_height + (int) (-100 * Math.cos((player.getPlayerAngle() - tangentAngle))));
+//					t_width / 2 + (int) (100 * Math.sin((player.getAngleToRoad()))),
+//					t_height + (int) (-100 * Math.cos((player.getAngleToRoad()))));
 
 				g.setColor(Color.yellow);
 
@@ -169,7 +171,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 						&& (i - forwardPosition) % 20 >= 16 - (forwardPosition % 18)) {
 					g.fillRect(
 							(int) ((t_width / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
-									- ((player.getPlayerAngle() - tangentAngle) * (i - forwardPosition) * 10))
+									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10))
 									- (50 - (i - forwardPosition) / 2) / 2),
 							height, (int) (50 - (i - forwardPosition) / 2), 10);
 				}
@@ -199,15 +201,14 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				}
 				alertFlasher++;
 			}
-			if (forwardPosition >= 400 && forwardPosition <= 500) {
+			if (forwardPosition >= 4400 && forwardPosition <= 4600 && lapcount == 3) {
 				g.setColor(Color.GREEN);
 				g.drawString("Almost There!", 305, 70);
-			}else if(forwardPosition >= 500) {
-				EndProcess e = new EndProcess();
-//				while(System.currentTimeMillis()-start/1000 <= 120) {
-//					
-//				}
+			}
 //				System.exit(0);
+			if(lapcount == 4) {
+				EndProcess e = new EndProcess();
+				t.stop();
 			}
 			// Create a Java2D version of g.
 			g2d.translate(xU + xW / 2, yU - xH / 2); // Translate the center of our coordinates.
@@ -266,8 +267,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			player.deccelerate();
 		}
 
-		forwardPosition += player.getForwardSpeed(road, forwardPosition);
-		lateralPosition += player.getLateralSpeed(road, forwardPosition);
+		forwardPosition += player.getForwardSpeed();
+		lateralPosition += player.getLateralSpeed();
 
 		if (lateralPosition * maxView > trackWidth / 2) {
 			player.onGrass();
@@ -287,6 +288,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		if (right) {
 			player.addPlayerAngle();
 		}
+		if(road.checkIfLap(forwardPosition)) {
+			forwardPosition = 0.0;
+			lapcount++;
+			
+		}
+		
 //		System.out.println(player.getSpeed());
 
 	}
@@ -306,7 +313,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 //			}
 //			side = s.nextLine();
 //		}
-//		n = new Server(side);
+//		n = new Server(side, "hello");
 //		Thread t1 = new Thread(n);
 //		t1.start();
 		Driver d = new Driver();

@@ -50,7 +50,7 @@ public class EndProcess extends JPanel {
 //		f.add(p);
 
 		f.add(this);
-		f.setTitle("Driving Game");
+		f.setTitle("NEGRO");
 		f.setSize(800, 800);
 
 		// setups icon image

@@ -1,9 +1,11 @@
-import java.awt.Point;
 
 public class PlayerCar {
 	private double playerAngle = 0;
 	
-	private double turnSpeed = Math.PI/50;
+	private double angleToRoad = 0;
+	
+	private double turnSpeed = Math.PI/100;
+	
 	private double speed = 0;
 	
 	private double maxSpeed = 3;
@@ -12,12 +14,26 @@ public class PlayerCar {
 
 	}
 	
-	public double getForwardSpeed(Road road, double position) {
-		return speed*Math.cos(getPlayerAngle()-road.getTanAngle(position));
+	public void setAngleToRoad(Road road, double position) {
+		angleToRoad = playerAngle-road.getTanAngle(position);
+		if (angleToRoad > Math.PI) {
+			angleToRoad -= Math.PI*2;
+		}
+		if (angleToRoad < -Math.PI) {
+			angleToRoad += Math.PI*2;
+		}
 	}
 	
-	public double getLateralSpeed(Road road, double position) {
-		return speed*Math.sin(getPlayerAngle()-road.getTanAngle(position))*0.1;
+	public double getAngleToRoad() {
+		return angleToRoad;
+	}
+	
+	public double getForwardSpeed() {
+		return speed*Math.cos(angleToRoad);
+	}
+	
+	public double getLateralSpeed() {
+		return speed*Math.sin(angleToRoad);
 	}
 
 	public double getPlayerAngle() {
@@ -65,3 +81,6 @@ public class PlayerCar {
 		return speed;
 	}
 }
+
+
+

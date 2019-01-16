@@ -11,12 +11,12 @@ import java.util.*;
 
 public class Server implements Runnable {
 
-
+	String name;
 	final String client;
 	final boolean isClient;
-	String ip = "192.168.1.75";
+	String ip = "localhost";
 	int port = 5454;
-
+	
 	ArrayList<PrintWriter> PW;
 	ArrayList<BufferedReader> BR;
 
@@ -25,7 +25,6 @@ public class Server implements Runnable {
 
 	PrintWriter pw;
 	BufferedReader br;
-
 
 
 	class ServerThread extends Thread{
@@ -38,13 +37,14 @@ public class Server implements Runnable {
 				br1 = new BufferedReader(new InputStreamReader(soc.getInputStream()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Cannot read from client");
 			}
 
 		}
 
 		public void run() {
 			String msg = null;
+			
 			while(true){
 				try {
 					msg = br1.readLine();
@@ -61,14 +61,14 @@ public class Server implements Runnable {
 						PW.get(i).flush();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+
 				} finally{
-					if(soc == null){
+					if(soc != null){
 						try {
 							soc.close();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							System.out.println("Cannot end connection");
 						}
 					}
 				}
@@ -78,7 +78,8 @@ public class Server implements Runnable {
 	}
 
 
-	public Server(String client){
+	public Server(String client, String name){
+		this.name = name;
 		this.client = client;
 		if(client.equals("client")) isClient = true;
 		else isClient = false;
@@ -134,7 +135,7 @@ public class Server implements Runnable {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("Cannot read from server");
 			} finally{
 				if(s == null){
 					try {
@@ -165,7 +166,7 @@ public class Server implements Runnable {
 					Thread t = new Thread(new ServerThread(s));
 					t.start();
 				} catch (Exception e){
-					e.printStackTrace();
+					System.out.println("Cannot create a connection between client.");
 				}
 			}
 
@@ -175,7 +176,6 @@ public class Server implements Runnable {
 
 
 }
-
 
 
 
