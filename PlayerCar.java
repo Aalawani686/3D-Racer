@@ -6,7 +6,7 @@ public class PlayerCar {
 	private double turnSpeed = Math.PI/50;
 	private double speed = 0;
 	
-	private double maxSpeed = 2;
+	private double maxSpeed = 3;
 	
 	public PlayerCar() {
 
@@ -39,7 +39,7 @@ public class PlayerCar {
 	}
 	public void accelerate() {
 		if (speed<maxSpeed) {
-			speed += 0.01;
+			speed += 0.05;
 		}
 		if (speed>maxSpeed) {
 			speed -= 0.05;
@@ -58,7 +58,7 @@ public class PlayerCar {
 		maxSpeed = 0.2;
 	}
 	public void onRoad() {
-		maxSpeed = 2;
+		maxSpeed = 3;
 	}
 
 	public double getSpeed() {

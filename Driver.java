@@ -48,7 +48,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	boolean down = false;
 
 	String background = "Background.jpg";
-	String car = "UserView.png";
+	String car = "Bike.png";
 
 	int xBG = -100;
 	int yBG = -230;
@@ -69,7 +69,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
 
 		// user
-		Image userV = Toolkit.getDefaultToolkit().getImage("UserView.png");
+		Image userV = Toolkit.getDefaultToolkit().getImage("Bike.png");
 
 //		scaling
 		Image backg1 = backg.getScaledInstance(BGw, BGh, Image.SCALE_DEFAULT); // scale background
@@ -92,12 +92,12 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
 
-//			g.setColor(Color.black);
-//			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
-//					(int) (road.getPara(i + 1).x + 700), (int) (-road.getPara(i + 1).y + 600));
-//			g.setColor(Color.red);
-//			g.drawRect((int) (road.getPara(forwardPosition).x + 700), (int) (-road.getPara(forwardPosition).y + 600),
-//					30, 30);
+			g.setColor(Color.black);
+			g.drawLine((int) (road.getPara(i).x + 700), (int) (-road.getPara(i).y + 600),
+					(int) (road.getPara(i + 1).x + 700), (int) (-road.getPara(i + 1).y + 600));
+			g.setColor(Color.red);
+			g.drawRect((int) (road.getPara(forwardPosition).x + 700), (int) (-road.getPara(forwardPosition).y + 600),
+					30, 30);
 
 			drawingPoint = road.getPara(i);
 
@@ -114,9 +114,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 					height, length, 10);
 
 			g.setColor(Color.black);
-			g.drawLine((int) (t_width / 2), t_height,
-					t_width / 2 + (int) (100 * Math.sin((player.getPlayerAngle() - tangentAngle))),
-					t_height + (int) (-100 * Math.cos((player.getPlayerAngle() - tangentAngle))));
+//			g.drawLine((int) (t_width / 2), t_height,
+//					t_width / 2 + (int) (100 * Math.sin((player.getPlayerAngle() - tangentAngle))),
+//					t_height + (int) (-100 * Math.cos((player.getPlayerAngle() - tangentAngle))));
 
 			g.setColor(Color.yellow);
 
@@ -138,6 +138,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		g.setFont(f);
 		g.drawString("@" + getTest(), 10, 50);
 		g.drawString(timePrint(), 10, 70);
+		g.drawString(Double.toString(player.getSpeed()).substring(0, 3), 10, 90);
 
 		Graphics2D g2d = (Graphics2D) g; // Create a Java2D version of g.
 		g2d.translate(xU + xW / 2, yU - xH / 2); // Translate the center of our coordinates.
