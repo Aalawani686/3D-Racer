@@ -74,8 +74,9 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int alertFlasher = 0;
 	Font cDown = new Font("Helvetica", 50, 50);
 	boolean r2go = false;
-
+	
 	public void paint(Graphics g) {
+		
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.translate(00, 00);
@@ -203,6 +204,10 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				g.drawString("Almost There!", 305, 70);
 			}else if(forwardPosition >= 500) {
 				EndProcess e = new EndProcess();
+//				while(System.currentTimeMillis()-start/1000 <= 120) {
+//					
+//				}
+//				System.exit(0);
 			}
 			// Create a Java2D version of g.
 			g2d.translate(xU + xW / 2, yU - xH / 2); // Translate the center of our coordinates.
@@ -305,6 +310,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 //		Thread t1 = new Thread(n);
 //		t1.start();
 		Driver d = new Driver();
+		
 
 	}
 
@@ -323,7 +329,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 		t = new Timer(17, this);
 		t.start();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 
 	}
