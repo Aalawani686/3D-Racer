@@ -47,7 +47,6 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	boolean up = false;
 	boolean down = false;
 
-	String background = "Background.jpg";
 	String car = "Bike.png";
 
 	int xBG = -100;
