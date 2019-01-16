@@ -158,26 +158,33 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public void update() {
 
+		if(up) {
+			player.accelerate();
+			//forwardPosition += 100;
+		}
+		if(!up) {
+			player.deccelerate();
+		}
+		
 		forwardPosition += player.getForwardSpeed(road, forwardPosition);
 		lateralPosition += player.getLateralSpeed(road, forwardPosition);
-
-		if (lateralPosition > trackWidth / 2) {
-
-			lateralPosition -= player.getLateralSpeed(road, forwardPosition);
+		
+		if(lateralPosition*maxView > trackWidth/2) {
+			player.onGrass();
 		}
-		if (lateralPosition < -trackWidth / 2) {
-
-			lateralPosition -= player.getLateralSpeed(road, forwardPosition);
+		else if(lateralPosition*maxView < -trackWidth/2) {
+			player.onGrass();
 		}
-
-		if (left) {
+		else {
+			player.onRoad();
+		}
+		
+		if(left) {
 			player.subtractPlayerAngle();
 		}
-		if (right) {
+		if(right) {
 			player.addPlayerAngle();
 		}
-
-		// System.out.println(lateralPosition);
 
 	}
 
