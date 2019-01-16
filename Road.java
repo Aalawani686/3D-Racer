@@ -4,7 +4,10 @@ import java.awt.geom.Point2D;
 public abstract class Road {
 	
 	private double shiftAngle = 0;
-	private double endPosition;
+	
+	private double endPosition = 10;
+	
+	public abstract double getEndPosition();
 	
 	public abstract Point2D.Double getPara(double position);
 	
@@ -16,13 +19,11 @@ public abstract class Road {
 		shiftAngle = Math.atan2(a.x-b.x, a.y-b.y)-this.getTanAngle(position);
 		if (shiftAngle > Math.PI) {
 			shiftAngle -= Math.PI*2;
-			System.out.println("yooo");
 		}
 		if (shiftAngle < -Math.PI) {
 			shiftAngle += Math.PI*2;
 			
 		}
-		System.out.println(shiftAngle);
 		return shiftAngle;
 	}
 	
@@ -39,6 +40,8 @@ public abstract class Road {
 		
 		return Math.atan2(this.getParaDeriv(position).x, this.getParaDeriv(position).y);
 	}
+	
+	
 }
 
 

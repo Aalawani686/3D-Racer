@@ -25,7 +25,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int t_width = 800;
 	int t_height = 800;
 	float width1 = 3;
-
+	
 	static boolean ready2go = false;
 	String test;
 	PlayerCar player = new PlayerCar();
@@ -37,6 +37,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int height;
 	int lapcount = 1;
 	int width = 5;
+	int flagH = 310;
 	boolean onTheRoad = true;
 	double forwardPosition = 0;
 	double lateralPosition = 0;
@@ -48,6 +49,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	double shift;
 	int tiempo = 3;
+	int finTime = 0;
 
 	boolean left = false;
 	boolean right = false;
@@ -75,7 +77,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int alertFlasher = 0;
 	Font cDown = new Font("Helvetica", 50, 50);
 	boolean r2go = false;
-	
+	int enemyPos = 600;
 	public void paint(Graphics g) {
 		
 		super.paintComponent(g);
@@ -123,6 +125,10 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			g.setFont(f);
 			g.setColor(Color.red);
 			g.drawRect((int) (748), (int) (65), 10, 10);
+			g.setColor(Color.green);
+			if(Math.abs(enemyPos - forwardPosition) < 200){
+			g.drawRect((int) (748 + (road.getPara(enemyPos).x - road.getPara(forwardPosition).x) / 10), (int)(65 - (road.getPara(enemyPos).y - road.getPara(forwardPosition).y) / 10), 10, 10);
+			}
 			player.setAngleToRoad(road, forwardPosition);
 			for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
 
@@ -140,7 +146,10 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				length = (int) (trackWidth - Math.abs(i - forwardPosition) * 15);
 				height = (int) (t_height - (i - forwardPosition) * (width - 1));
 				g.setColor(Color.gray);
-				if (i == (int) forwardPosition + 97) {
+				if (i == road.getEndPosition()) {
+					lW = length;
+					lH = length*2/3;
+					flagH = height - lH;
 					g.fillRect(
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
@@ -149,7 +158,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 					g.drawImage(finalLine,
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
-							310, this);
+							flagH, this);
 
 				} else {
 					g.fillRect(
@@ -201,13 +210,15 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				}
 				alertFlasher++;
 			}
-			if (forwardPosition >= 4400 && forwardPosition <= 4600 && lapcount == 3) {
+			if (forwardPosition >= road.getEndPosition()-200 && forwardPosition <= road.getEndPosition() && lapcount == 3) {
 				g.setColor(Color.GREEN);
 				g.drawString("Almost There!", 305, 70);
 			}
 //				System.exit(0);
 			if(lapcount == 4) {
+				finTime = (int) ((System.currentTimeMillis()-start/1000));
 				EndProcess e = new EndProcess();
+				e.setTime(timePrint());
 				t.stop();
 			}
 			// Create a Java2D version of g.
