@@ -23,7 +23,7 @@ public class Wilkommen implements ActionListener {
     c.fill = GridBagConstraints.HORIZONTAL;
     }
  
-    JButton credit = new JButton("Credits- Because we have no lives");
+    JButton credit = new JButton("Credits");
     if (shouldWeightX) {
     c.weightx = 1.0;
     }
@@ -40,7 +40,7 @@ public class Wilkommen implements ActionListener {
     });
     
  
-    JButton multi = new JButton("Play in a Lobby with Strangers because you have no friends ");
+    JButton multi = new JButton("Multiplayer ");
     c.fill = GridBagConstraints.HORIZONTAL;
     c.weightx = 1.0;
     c.gridx = 1;
@@ -54,7 +54,7 @@ public class Wilkommen implements ActionListener {
 //    c.gridy = 0;
 //    pane.add(button, c);
  
-    JButton single = new JButton("Play Alone Loser");
+    JButton single = new JButton("Single Player");
     c.fill = GridBagConstraints.HORIZONTAL;
     c.ipady = 40;      //make this component tall
     c.weightx = 0.0;
@@ -71,7 +71,7 @@ public class Wilkommen implements ActionListener {
     });
     
  
-    JButton quit = new JButton("Never Mind I suck");
+    JButton quit = new JButton("Quit");
     c.fill = GridBagConstraints.HORIZONTAL;
     c.ipady = 0;       //reset to default
     c.weighty = 1.0;   //request any extra vertical space
