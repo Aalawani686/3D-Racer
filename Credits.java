@@ -8,7 +8,7 @@ public class Credits {
 		JFrame f = new JFrame("hello");
 		JLabel Sahith = new JLabel("Sahith: Road Creation + Math");
 		JLabel Rudy = new JLabel("Rudy: GUI");
-		JLabel Andy = new JLabel("Andy: Network");
+		JLabel Andy = new JLabel("Andy: Networking");
 		JPanel p = new JPanel();
 		p.add(Sahith);
 		p.add(Rudy);

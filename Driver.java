@@ -185,6 +185,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		if(right) {
 			player.addPlayerAngle();
 		}
+		System.out.println(player.getSpeed());
 
 	}
 
