@@ -11,12 +11,14 @@ public class Track1 extends Road{
 		}
 		else {
 			return new Point2D.Double(-position, 500);
+			
 		}
 		
 		//return new Point2D.Double(0, position);
 //		
 		
 	}
+	
 	
 	public Point2D.Double getParaDeriv(double position) {
 		if(position < 200) {
