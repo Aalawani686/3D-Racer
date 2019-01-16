@@ -98,8 +98,8 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.red);
 		g.drawRect((int) (700), (int) (100), 10, 10);
 		for (int i = (int) (forwardPosition); i < forwardPosition + 500; i++) {
-		
-			g.setColor(Color.BLACK);
+			g.setColor(Color.black);
+			
 			
 			
 			g.drawLine((int) ((road.getPara(i).x / 10 + 700) - (int) road.getPara(forwardPosition).x / 10),
@@ -246,15 +246,11 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == 39) {
 			right = true;
 
-			if (xBG <= -10) {
-				xBG += 10;
-			}
+			
 		}
 		if (e.getKeyCode() == 37) {
 			left = true;
-			if (xBG >= -190) {
-				xBG -= 10;
-			}
+			
 		}
 
 		if (e.getKeyCode() == 38) {
