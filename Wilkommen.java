@@ -48,7 +48,14 @@ public class Wilkommen implements ActionListener {
 		c.gridx = 1;
 		c.gridy = 0;
 		pane.add(multi, c);
-
+		multi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (multi.isEnabled()) {
+					txt.createAndShowGUI();
+					txt.setisMany(true);
+				}
+			}
+		});
 //    button = new JButton("Button 3");
 //    c.fill = GridBagConstraints.HORIZONTAL;
 //    c.weightx = 0.5;

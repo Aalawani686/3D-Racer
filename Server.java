@@ -11,12 +11,12 @@ import java.util.*;
 
 public class Server implements Runnable {
 
-	String name;
+
 	final String client;
 	final boolean isClient;
-	String ip = "localhost";
+	String ip = "192.168.0.40";
 	int port = 5454;
-	
+
 	ArrayList<PrintWriter> PW;
 	ArrayList<BufferedReader> BR;
 
@@ -26,6 +26,8 @@ public class Server implements Runnable {
 	PrintWriter pw;
 	BufferedReader br;
 
+	HashMap times = new HashMap();
+	HashMap positions = new HashMap();
 
 	class ServerThread extends Thread{
 
@@ -37,20 +39,23 @@ public class Server implements Runnable {
 				br1 = new BufferedReader(new InputStreamReader(soc.getInputStream()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Cannot read from client");
+				e.printStackTrace();
 			}
 
 		}
 
 		public void run() {
 			String msg = null;
-			
 			while(true){
 				try {
 					msg = br1.readLine();
 					if(msg != null){
 						if(msg.charAt(0) == 'p'){
 							System.out.println("forward: " + msg.substring(1));
+							positions.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));					}
+						else if(msg.charAt(0) == 't'){
+							System.out.println("time: " + msg.substring(1));
+							times.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
 						}
 						else if(msg.charAt(0) == 'l'){
 							System.out.println("lateral: " + msg.substring(1));
@@ -61,14 +66,14 @@ public class Server implements Runnable {
 						PW.get(i).flush();
 					}
 				} catch (IOException e) {
-
+					e.printStackTrace();
 				} finally{
-					if(soc != null){
+					if(soc == null){
 						try {
 							soc.close();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
-							System.out.println("Cannot end connection");
+							e.printStackTrace();
 						}
 					}
 				}
@@ -78,8 +83,7 @@ public class Server implements Runnable {
 	}
 
 
-	public Server(String client, String name){
-		this.name = name;
+	public Server(String client){
 		this.client = client;
 		if(client.equals("client")) isClient = true;
 		else isClient = false;
@@ -128,14 +132,18 @@ public class Server implements Runnable {
 				msg = br.readLine();
 				if(msg != null){
 					if(msg.charAt(0) == 'p'){
-						System.out.println("forward: " + msg.substring(1));
+//						System.out.println("forward: " + msg.substring(1));
+						positions.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));					}
+					else if(msg.charAt(0) == 't'){
+						System.out.println("time: " + msg.substring(1));
+						times.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
 					}
 					else if(msg.charAt(0) == 'l'){
-						System.out.println("lateral: " + msg.substring(1));
+//						System.out.println("lateral: " + msg.substring(1));
 					}
 				}
 			} catch (IOException e) {
-				System.out.println("Cannot read from server");
+				e.printStackTrace();
 			} finally{
 				if(s == null){
 					try {
@@ -166,21 +174,25 @@ public class Server implements Runnable {
 					Thread t = new Thread(new ServerThread(s));
 					t.start();
 				} catch (Exception e){
-					System.out.println("Cannot create a connection between client.");
+					e.printStackTrace();
 				}
 			}
 
 		}
 	}
+	
+	public HashMap getPositions() {
+		return positions;
+	}
+	
+	public HashMap getTimes() {
+		return times;
+	}
+
 
 
 
 }
-
-
-
-
-
 
 
 
