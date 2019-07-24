@@ -1,19 +1,31 @@
-
+/**
+ * PlayerCar.java
+ *  Contains methods concerning movement of the player's vehicle
+ *  Includes acceleration and speed
+ *
+ * @author Sahith Konakalla
+ * @author Aniruddha Alawani
+ *
+ *
+ *
+ * @date January 22, 2019
+ *
+ */
 public class PlayerCar {
 	private double playerAngle = 0;
-	
+
 	private double angleToRoad = 0;
-	
+
 	private double turnSpeed = Math.PI/100;
-	
+
 	private double speed = 0;
-	
-	private double maxSpeed = 3;
-	
+
+	private double maxSpeed = 4;
+
 	public PlayerCar() {
 
 	}
-	
+
 	public void setAngleToRoad(Road road, double position) {
 		angleToRoad = playerAngle-road.getTanAngle(position);
 		if (angleToRoad > Math.PI) {
@@ -23,15 +35,15 @@ public class PlayerCar {
 			angleToRoad += Math.PI*2;
 		}
 	}
-	
+
 	public double getAngleToRoad() {
 		return angleToRoad;
 	}
-	
+
 	public double getForwardSpeed() {
 		return speed*Math.cos(angleToRoad);
 	}
-	
+
 	public double getLateralSpeed() {
 		return speed*Math.sin(angleToRoad);
 	}
@@ -46,7 +58,7 @@ public class PlayerCar {
 			playerAngle = -Math.PI;
 		}
 	}
-	
+
 	public void subtractPlayerAngle() {
 		playerAngle -= turnSpeed;
 		if(playerAngle < -Math.PI) {
@@ -59,7 +71,7 @@ public class PlayerCar {
 		}
 		if (speed>maxSpeed) {
 			speed -= 0.05;
-			
+
 		}
 	}
 	public void deccelerate() {
@@ -71,16 +83,13 @@ public class PlayerCar {
 		}
 	}
 	public void onGrass() {
-		maxSpeed = 0.2;
+		maxSpeed = 0.5;
 	}
 	public void onRoad() {
-		maxSpeed = 3;
+		maxSpeed = 4;
 	}
 
 	public double getSpeed() {
 		return speed;
 	}
 }
-
-
-

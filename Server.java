@@ -1,3 +1,13 @@
+/**
+ * Server.java
+ *  Contains methods the Network Connection between players
+ *
+ * @author Aniruddha Alawani
+ *
+ * @date January 22, 2019
+ *
+ */
+
 import java.io.BufferedReader;
 
 import java.io.IOException;
@@ -14,7 +24,7 @@ public class Server implements Runnable {
 
 	final String client;
 	final boolean isClient;
-	String ip = "192.168.0.40";
+	String ip = "localhost";
 	int port = 5454;
 
 	ArrayList<PrintWriter> PW;
@@ -28,6 +38,7 @@ public class Server implements Runnable {
 
 	HashMap times = new HashMap();
 	HashMap positions = new HashMap();
+	HashMap laterals = new HashMap();
 
 	class ServerThread extends Thread{
 
@@ -51,14 +62,15 @@ public class Server implements Runnable {
 					msg = br1.readLine();
 					if(msg != null){
 						if(msg.charAt(0) == 'p'){
-							System.out.println("forward: " + msg.substring(1));
+//							System.out.println("forward: " + msg.substring(1));
 							positions.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));					}
 						else if(msg.charAt(0) == 't'){
-							System.out.println("time: " + msg.substring(1));
+//							System.out.println("time: " + msg.substring(1));
 							times.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
 						}
 						else if(msg.charAt(0) == 'l'){
-							System.out.println("lateral: " + msg.substring(1));
+							laterals.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
+//							System.out.println("lateral: " + msg.substring(1));
 						}
 					}
 					for(int i=0; i<PW.size(); i++){
@@ -83,7 +95,7 @@ public class Server implements Runnable {
 	}
 
 
-	public Server(String client){
+	public Server(String client, String _ip){
 		this.client = client;
 		if(client.equals("client")) isClient = true;
 		else isClient = false;
@@ -95,13 +107,13 @@ public class Server implements Runnable {
 				ss = new ServerSocket(port);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Failed to receive connection from client");			
+				System.out.println("Failed to receive connection from client");
 			}
 
 		}
 		else{
 			try{
-				s = new Socket(ip, port);
+				s = new Socket(_ip, port);
 				pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 				br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			}catch (IOException e) {
@@ -109,7 +121,7 @@ public class Server implements Runnable {
 				System.out.println("Failed to connect client to server");
 			}
 		}
-	}	
+	}
 
 	public synchronized void send(String message){
 		if(isClient){
@@ -117,7 +129,7 @@ public class Server implements Runnable {
 			pw.flush();
 		}
 		else{
-			System.out.println(PW.size());
+//			System.out.println(PW.size());
 			for(int i=0; i<PW.size(); i++){
 				PW.get(i).println(message);
 				PW.get(i).flush();
@@ -135,14 +147,16 @@ public class Server implements Runnable {
 //						System.out.println("forward: " + msg.substring(1));
 						positions.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));					}
 					else if(msg.charAt(0) == 't'){
-						System.out.println("time: " + msg.substring(1));
+//						System.out.println("time: " + msg.substring(1));
 						times.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
 					}
 					else if(msg.charAt(0) == 'l'){
 //						System.out.println("lateral: " + msg.substring(1));
+						laterals.put(msg.substring(msg.indexOf("&")+1), Double.parseDouble(msg.substring(1, msg.indexOf("&"))));
 					}
 				}
 			} catch (IOException e) {
+				System.out.println("oof");
 				e.printStackTrace();
 			} finally{
 				if(s == null){
@@ -150,7 +164,7 @@ public class Server implements Runnable {
 						s.close();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						System.out.println("Client connection has dropped");	
+						System.out.println("Client connection has dropped");
 					}
 				}
 			}
@@ -164,11 +178,11 @@ public class Server implements Runnable {
 		else{
 			while(true){
 				try{
-					System.out.println("LLLLLLLL");
+//					System.out.println("LLLLLLLL");
 					s = ss.accept();
 					pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 					br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-					System.out.println("HIII");
+//					System.out.println("HIII");
 					PW.add(pw);
 					BR.add(br);
 					Thread t = new Thread(new ServerThread(s));
@@ -180,11 +194,15 @@ public class Server implements Runnable {
 
 		}
 	}
-	
+
 	public HashMap getPositions() {
 		return positions;
 	}
-	
+
+	public HashMap getLaterals() {
+		return laterals;
+	}
+
 	public HashMap getTimes() {
 		return times;
 	}
@@ -193,17 +211,3 @@ public class Server implements Runnable {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

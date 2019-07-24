@@ -1,3 +1,18 @@
+
+/**
+ * Driver.java
+ * Actual Gameplay. Includes:
+ * The road creation, the movement of the car
+ *	Includes rendering of opponents
+ * @author Sahith Konakalla
+ * @author Aniruddh Khanwale
+ * @author Aniruddha Alawani
+ *
+ *
+ *
+ * @date January 22, 2019
+ *
+ */
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -21,45 +36,67 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class Driver extends JPanel implements ActionListener, KeyListener {
-	int t_width = 800;
-	int t_height = 800;
-	float width1 = 3;
-
-	static boolean ready2go = false;
-	static String test = "Rudy";
+	// classes to be implemented or used
 	PlayerCar player = new PlayerCar();
 	Road road = new Track1();
+
+	// frame dimensiions
+	int t_width = 800;
+	int t_height = 800;
+
+	// update control
+	boolean pintar = true;
+	long start = System.currentTimeMillis() + 4200;
+	long traffic = System.currentTimeMillis();
+	boolean r2go = false;
+
+	// Networking data
+	static String ip = "";
+	static String test = "";
 	static String side = "";
 	static Server n;
+
+	static ArrayList<Double> enemyPos = new ArrayList<Double>();
+	static ArrayList<Double> enemyLat = new ArrayList<Double>();
+	static ArrayList<String> enemyNames = new ArrayList<String>();
+
+	HashMap positions = new HashMap();
+	HashMap laterals = new HashMap();
+	HashMap times = new HashMap();
+
+	ArrayList<Image> opps = new ArrayList<Image>();
+
+	// GameType Control
+	static String gameType;
+
+	// road & image variables & datum
 	int trackWidth = t_width * 2;
+	boolean onTheRoad = true;
+	double forwardPosition = 0;
+	double lateralPosition = 0;
 	int length;
 	int height;
 	int lapcount = 1;
 	int width = 5;
 	int flagH = 310;
-	boolean onTheRoad = true;
-	double forwardPosition = 0;
-	double lateralPosition = 0;
-	boolean ender = true;
 	Point2D.Double playerPoint;
 	Point2D.Double drawingPoint;
-
 	double tangentAngle;
-
 	double shift;
 	int tiempo = 3;
 	int finTime = 0;
+	int alertFlasher = 0;
 
+	// direction controls
 	boolean left = false;
 	boolean right = false;
-
 	boolean up = false;
 	boolean down = false;
 
+	// image data
 	String car = "Bike.png";
 	String fin = "FinishGraphic.png";
 	String oppo = "Opponent.png";
-	boolean vari = false;
 	int xBG = -100;
 	int yBG = -230;
 	int xU = 312;
@@ -69,71 +106,64 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	int xW = 175;
 	int xH = 116;
 	int maxView = 100;
-	Font f = new Font("Helvetica", 15, 20);
-	Font name = new Font("Helvetica", 30, 30);
-	long start = System.currentTimeMillis() + 4200;
-	long traffic = System.currentTimeMillis();
 	int lW = xW - 15;
 	int lH = xH;
 	int oW = 100;
 	int oH = 100;
 	int gH;
-	int alertFlasher = 0;
-	Font cDown = new Font("Helvetica", 50, 50);
-	boolean r2go = false;
-	int enemyPos = 200;
-	HashMap positions;
-	HashMap times;
-	ArrayList<Image> opps = new ArrayList<Image>();
-	ArrayList<String> oppName = new ArrayList<String>();
-	ArrayList<Integer> oppTime = new ArrayList<Integer>();
 
+	// text and fonts
+	Font f = new Font("Helvetica", 15, 20);
+	Font name = new Font("Helvetica", 30, 30);
+	Font cDown = new Font("Helvetica", 50, 50);
+
+	/*
+	 * Paint method. Called repeatedly to create actual things
+	 */
 	public void paint(Graphics g) {
 
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.translate(00, 00);
 		MediaTracker tracker = new MediaTracker(new java.awt.Container());
-		// String src = new File("").getAbsolutePath() + "/src/";
-		// background
-		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
 
-		// userx
+		// image initialization
+		Image backg = Toolkit.getDefaultToolkit().getImage("DeathValley.jpg");
 		Image userV = Toolkit.getDefaultToolkit().getImage("Bike.png");
 		Image finLine = Toolkit.getDefaultToolkit().getImage(fin);
-		if (vari) {
-
-			for (int i = 0; i < positions.size(); i++) {
-				Image opp = Toolkit.getDefaultToolkit().getImage(oppo);
-				Image adversary = opp.getScaledInstance(oW, oH, Image.SCALE_DEFAULT);
-				opps.add(adversary);
-				tracker.addImage(adversary, 0);
-			}
-		}
+		Image opp = Toolkit.getDefaultToolkit().getImage(oppo);
 
 		// scaling
+		Image adversary = opp.getScaledInstance(oW, oH, Image.SCALE_DEFAULT);
+		if (gameType.equals("multi") || gameType.equals("admin")) {
+			opps.add(adversary);
+			tracker.addImage(adversary, 0);
+		}
 		Image backg1 = backg.getScaledInstance(BGw, BGh, Image.SCALE_DEFAULT); // scale background
 		Image userV1 = userV.getScaledInstance(xW, xH, Image.SCALE_DEFAULT); // scale motorcycle
 		Image finalLine = finLine.getScaledInstance(lW, lH, Image.SCALE_DEFAULT); // scale motorcycle
 
+		// image modulation
+
 		tracker.addImage(backg1, 0);
 		tracker.addImage(userV1, 0);
 		tracker.addImage(finalLine, 0);
+
 		try {
 			tracker.waitForAll();
 		} catch (InterruptedException ex) {
 			throw new RuntimeException("Image loading interrupted", ex);
 		}
-		g.drawImage(backg1, xBG, yBG, this);
-		if (r2go) {
+
+		g.drawImage(backg1, xBG, yBG, this); // draws background
+
+		if (r2go) { // verifies that the waiting period is over
 
 			playerPoint = road.getPara(forwardPosition);
 			tangentAngle = road.getTanAngle(forwardPosition);
 
-			// System.out.println("angle difference: " + player.getPlayerAngle() + " " +
-			// tangentAngle);
+			// Minimap code
 
-			// g.drawString("Minimap", 600, 30);
 			g.setColor(Color.WHITE);
 			g.fillRect(648, 8, 150, 100);
 			g.setColor(Color.BLACK);
@@ -142,27 +172,31 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			g.drawString("Lap " + Integer.toString(lapcount) + " of" + " 3", 676, 100);
 			g2d.setStroke(new BasicStroke());
 			g.setFont(f);
-			g.setColor(Color.red);
-			g.drawRect((int) (748), (int) (65), 10, 10);
 			g.setColor(Color.green);
-			if (Math.abs(enemyPos - forwardPosition) < 200) {
-				g.drawRect((int) (748 + (road.getPara(enemyPos).x - road.getPara(forwardPosition).x) / 10),
-						(int) (65 - (road.getPara(enemyPos).y - road.getPara(forwardPosition).y) / 10), 10, 10);
+			g.drawRect((int) (748), (int) (65), 10, 10);
+			g.setColor(Color.red);
+
+			// adversaries on minimap
+
+			if (gameType.equals("multi") || gameType.equals("admin")) {
+				for (int i = 0; i < enemyPos.size(); i++) {
+					if (Math.abs(enemyPos.get(i) - forwardPosition) < 200) {
+						g.drawRect(
+								(int) (748 + (road.getPara(enemyPos.get(i)).x - road.getPara(forwardPosition).x) / 10),
+								(int) (65 - (road.getPara(enemyPos.get(i)).y - road.getPara(forwardPosition).y) / 10),
+								10, 10);
+					}
+				}
 			}
+
 			player.setAngleToRoad(road, forwardPosition);
-			for (int i = (int) (forwardPosition); i < forwardPosition + 105; i++) {
+			for (int i = (int) (forwardPosition); i < forwardPosition + 105; i++) { // this loop is responsible for
+																					// drawing the road
+				// draws road
 
 				g.setColor(Color.black);
-				g.drawLine((int) ((road.getPara(i).x / 10 + 748) - (int) road.getPara(forwardPosition).x / 10),
-						(int) (-road.getPara(i).y / 10 + 65 + (int) road.getPara(forwardPosition).y / 10),
-						(int) ((road.getPara(i + 1).x / 10 + 748) - (int) road.getPara(forwardPosition).x / 10),
-						(int) (-road.getPara(i + 1).y / 10 + 65) + (int) road.getPara(forwardPosition).y / 10);
 				drawingPoint = road.getPara(i);
-
 				shift = road.getShift(playerPoint, drawingPoint, forwardPosition) * 5;
-
-				// forwardPosition = (int)(forwardPosition);
-
 				length = (int) (trackWidth - Math.abs(i - forwardPosition) * 15);
 				height = (int) (t_height - (i - forwardPosition) * (width - 1));
 
@@ -170,50 +204,22 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				g.fillRect((int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 						- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)), height, length, 10);
 
+				// draws finish line
+
 				if (i == road.getEndPosition()) {
 					lW = length;
 					lH = length * 2 / 3;
 					flagH = height - lH;
-
 					g.drawImage(finalLine,
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
 							flagH, this);
 
 				}
-				/*
-				 * if (i == enemyPos) {
-				 * 
-				 * oW = length / 10; oH = length; System.out.println("bike: " + ((t_width - oW)
-				 * / 2 - shift - lateralPosition * (maxView - (i - forwardPosition)) -
-				 * ((player.getAngleToRoad()) * (i - forwardPosition) * 10))); gH = height - oH;
-				 * // g.drawImage(adversary, // (int) ((t_width - oW) / 2 - shift -
-				 * lateralPosition * (maxView - (i - forwardPosition)) // -
-				 * ((player.getAngleToRoad()) * (i - forwardPosition) * 10)), // gH, this);
-				 * g.setColor(Color.green);
-				 * 
-				 * // g.fillRect((int) ((t_width - length) / 2 - shift - lateralPosition *
-				 * (maxView - (i - forwardPosition)) // - ((player.getAngleToRoad()) * (i -
-				 * forwardPosition) * 10)), height, length, 10); //
-				 * 
-				 * g.fillRect((int) ((t_width - oW) / 2 - shift - lateralPosition * (maxView -
-				 * (i - forwardPosition)) - ((player.getAngleToRoad()) * (i -
-				 * forwardPosition))*10), gH, oW, oH);
-				 * 
-				 * }
-				 */
 
-				g.setColor(Color.GRAY);
-
-				g.setColor(Color.black);
-				// g.drawLine((int) (t_width / 2), t_height,
-				// t_width / 2 + (int) (100 * Math.sin((player.getAngleToRoad()))),
-				// t_height + (int) (-100 * Math.cos((player.getAngleToRoad()))));
+				// creates middle lines
 
 				g.setColor(Color.yellow);
-
-				// System.out.println((i-forwardPosition)%20 + " " + (19-(forwardPosition%18)) +
-				// " " + (16-(forwardPosition%18)));
 				if ((i - forwardPosition) % 20 <= 19 - (forwardPosition % 18)
 						&& (i - forwardPosition) % 20 >= 16 - (forwardPosition % 18)) {
 					g.fillRect(
@@ -224,17 +230,25 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				}
 
 			}
+
+			// creates the actual minimap lines
+
+			for (int i = (int) (forwardPosition); i < forwardPosition + 8000; i++) {
+				g.setColor(Color.BLACK);
+				g.drawLine((int) ((road.getPara(i).x / 10 + 748) - (int) road.getPara(forwardPosition).x / 10),
+						(int) (-road.getPara(i).y / 10 + 65 + (int) road.getPara(forwardPosition).y / 10),
+						(int) ((road.getPara(i + 1).x / 10 + 748) - (int) road.getPara(forwardPosition).x / 10),
+						(int) (-road.getPara(i + 1).y / 10 + 65) + (int) road.getPara(forwardPosition).y / 10);
+			}
+
 			player.setAngleToRoad(road, forwardPosition);
+
+			// loop to draw finish line
+
 			for (int i = (int) (forwardPosition); i < forwardPosition + 105; i++) {
-
 				g.setColor(Color.black);
-
 				drawingPoint = road.getPara(i);
-
 				shift = road.getShift(playerPoint, drawingPoint, forwardPosition) * 5;
-
-				// forwardPosition = (int)(forwardPosition);
-
 				length = (int) (trackWidth - Math.abs(i - forwardPosition) * 15);
 				height = (int) (t_height - (i - forwardPosition) * (width - 1));
 
@@ -242,47 +256,13 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 					lW = length;
 					lH = length * 2 / 3;
 					flagH = height - lH;
-
 					g.drawImage(finalLine,
 							(int) ((t_width - length) / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
 									- ((player.getAngleToRoad()) * (i - forwardPosition) * 10)),
 							flagH, this);
 
 				}
-
-				/*
-				 * if (i == enemyPos) {
-				 * 
-				 * oW = length / 10; oH = length; System.out.println("bike: " + ((t_width - oW)
-				 * / 2 - shift - lateralPosition * (maxView - (i - forwardPosition)) -
-				 * ((player.getAngleToRoad()) * (i - forwardPosition) * 10))); gH = height - oH;
-				 * // g.drawImage(adversary, // (int) ((t_width - oW) / 2 - shift -
-				 * lateralPosition * (maxView - (i - forwardPosition)) // -
-				 * ((player.getAngleToRoad()) * (i - forwardPosition) * 10)), // gH, this);
-				 * g.setColor(Color.green);
-				 * 
-				 * // g.fillRect((int) ((t_width - length) / 2 - shift - lateralPosition *
-				 * (maxView - (i - forwardPosition)) // - ((player.getAngleToRoad()) * (i -
-				 * forwardPosition) * 10)), height, length, 10); //
-				 * 
-				 * g.fillRect((int) ((t_width - oW) / 2 - shift - lateralPosition * (maxView -
-				 * (i - forwardPosition)) - ((player.getAngleToRoad()) * (i -
-				 * forwardPosition))*10), gH, oW, oH);
-				 * 
-				 * }
-				 */
-
-				g.setColor(Color.GRAY);
-
-				g.setColor(Color.black);
-				// g.drawLine((int) (t_width / 2), t_height,
-				// t_width / 2 + (int) (100 * Math.sin((player.getAngleToRoad()))),
-				// t_height + (int) (-100 * Math.cos((player.getAngleToRoad()))));
-
 				g.setColor(Color.yellow);
-
-				// System.out.println((i-forwardPosition)%20 + " " + (19-(forwardPosition%18)) +
-				// " " + (16-(forwardPosition%18)));
 				if ((i - forwardPosition) % 20 <= 19 - (forwardPosition % 18)
 						&& (i - forwardPosition) % 20 >= 16 - (forwardPosition % 18)) {
 					g.fillRect(
@@ -300,8 +280,6 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 				shift = road.getShift(playerPoint, drawingPoint, forwardPosition) * 5;
 
-				// forwardPosition = (int)(forwardPosition);
-
 				length = (int) (trackWidth - Math.abs(i - forwardPosition) * 15);
 				height = (int) (t_height - (i - forwardPosition) * (width - 1));
 
@@ -316,24 +294,26 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 							flagH, this);
 
 				}
-				if (vari) {
-					for (int j = 0; j < positions.size(); j++) {
-						if (i == positions.get(j).hashCode()) {
+
+				// creates enemy images, contingent on existence of server
+
+				if (gameType.equals("multi") || gameType.equals("admin")) {
+					for (int q = 0; q < enemyPos.size(); q++) {
+						if (i == enemyPos.get(q).intValue()) {
 							oW = length / 10;
 							oH = length / 7;
 							gH = height - oH;
-							g.setColor(Color.green);
-							g.drawImage(opps.get(j),
-									(int) ((t_width / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
-											- ((player.getAngleToRoad()) * (i - forwardPosition) * 10))
-											- (oW - (i - forwardPosition) / 2) / 2),
-									gH, this);
-
+							// draws opponent(s)
+							if(enemyLat.size()==enemyPos.size()) {
+								g.drawImage(adversary, (int) ((t_width / 2 - shift - lateralPosition * (maxView - (i - forwardPosition))
+										- ((player.getAngleToRoad()) * (i - forwardPosition) * 10) + (enemyLat.get(q)/trackWidth)*length*100)
+										- (oW/2 - (i - forwardPosition) / 20) ),
+										gH, (int) (oW - (i - forwardPosition)/10), (int) ( oH - (i - forwardPosition)/7), this);
+							}
 						}
 					}
 
 				}
-
 			}
 
 			g.setColor(Color.BLACK);
@@ -343,11 +323,14 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			g.setColor(Color.GREEN);
 
 			g.setFont(name);
-			g.drawString("@" + getTest(), 10, 30); // .substring(0, 8) ADDDDDDDD
+			g.drawString("@" + getTest(), 10, 30);
 			g.setFont(f);
 			g.drawString(timePrint(), 10, 50);
 			g.drawString("Current Speed:" + Double.toString(player.getSpeed()).substring(0, 3), 10, 70);
 			g2d.setStroke(new BasicStroke());
+
+			// flashes alert to put you on the road again
+
 			if (!onTheRoad) {
 
 				g.setColor(Color.red);
@@ -359,28 +342,44 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 				}
 				alertFlasher++;
 			}
+
+			// flashes alert that you are almost done
+
 			if (forwardPosition >= road.getEndPosition() - 200 && forwardPosition <= road.getEndPosition()
-					&& lapcount == 3) {
+					&& lapcount == 2) {
 				g.setColor(Color.GREEN);
 				g.drawString("Almost There!", 305, 70);
 			}
-			// System.exit(0);
+
+			// ending process
 			if (lapcount == 4) {
-				finTime = (int) ((System.currentTimeMillis() - start / 1000));
-				n.send("t" + Integer.toString(finTime) + "&" + test);
-				EndProcess e = new EndProcess();
-				e.setYee(vari);
+				finTime = (int) ((System.currentTimeMillis() - start));
+				if ((gameType.equals("multi") || gameType.equals("admin")) && enemyPos.size() >= 2) {
+					n.send("t" + Integer.toString(finTime) + "&" + test);
+				}
+				EndProcess e = null;
+				try {
+					e = new EndProcess();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				e.setName(getTest());
+
+				e.setTime(finTime);
+
 				t.stop();
 			}
 			// Create a Java2D version of g.
 			g2d.translate(xU + xW / 2, yU - xH / 2); // Translate the center of our coordinates.
-			// System.out.println("pos: " + forwardPosition);
+
 			if (right) {
-				g2d.rotate(0.5); // Rotate the image by 1 radian.
+				g2d.rotate(0.5); // Rotate the image by 0.5 radian.
 				g2d.drawImage(userV1, 0, xH / 2, this);
 
 			} else if (left) {
-				g2d.rotate(-0.5); // Rotate the image by 1 radian.
+				g2d.rotate(-0.5); // Rotate the image by 0.5 radian.
 				g2d.drawImage(userV1, -xW, xH / 2, this);
 
 			} else {
@@ -388,6 +387,7 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			}
 
 		} else {
+			// timer
 			g.setFont(cDown);
 			if (tiempo == 3) {
 				g.setColor(Color.red);
@@ -421,9 +421,45 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 
 	public void update() {
 
+		// updates data by sending information to opponents
+		boolean isIn;
+		n.send("p"+forwardPosition+"&"+getTest());
+		positions = n.getPositions();
+
+		n.send("l"+lateralPosition+"&"+getTest());
+		laterals = n.getLaterals();
+
+		Iterator it = positions.entrySet().iterator();
+		Iterator it2 = laterals.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			Map.Entry pair2 = (Map.Entry) it2.next();
+			isIn = false;
+			for(int i=0; i<enemyNames.size(); i++){
+				if(pair.getKey().equals(getTest())){
+					isIn = true;
+					continue;
+				}
+				if(pair.getKey().equals(enemyNames.get(i))){
+					enemyPos.set(i, (Double) pair.getValue());
+					enemyLat.set(i, (Double) pair2.getValue());
+					isIn = true;
+				}
+
+			}
+			if(isIn == false){
+				enemyPos.add((Double)pair.getValue());
+				enemyLat.add((Double)pair2.getValue());
+				enemyNames.add((String) pair.getKey());
+			}
+			isIn = false;
+		}
+
+		times = n.getTimes();
+
 		if (up) {
 			player.accelerate();
-			// forwardPosition += 100;
+
 		}
 		if (!up) {
 			player.deccelerate();
@@ -455,55 +491,71 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 			lapcount++;
 
 		}
-		for(int i = 0; i < positions.size(); i++) {
-			oppName.set(i, null);
-			oppTime.set(i, times.get(i).hashCode());
-			
-		}
-		if(times.containsValue(null)) {
-			t.stop();
-		}
-
-		// System.out.println(player.getSpeed());
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		update();
-		repaint();
+		if (pintar) {
+			repaint();
+		}
+
 	}
 
 	public static void main(String[] arg) throws IOException {
-		System.out.println("client or server");
-		Scanner s = new Scanner(System.in);
-		while (true) {
-			if (side.equals("client") || side.equals("server")) {
-				break;
-			}
-			side = s.nextLine();
-		}
-		n = new Server(side);
-		Thread t1 = new Thread(n);
-		t1.start();
-		Driver d = new Driver();
+
 	}
 
 	public Driver() {
-		for (int i = 0; i < 50; i++) {
-			oppName.add(null);
-			oppTime.add(null);
+		// constructor creates and initializes variables based on the gametype
+		System.out.println(gameType);
+		if (gameType.equals("single")) {
+			n = new Server("server", "localhost");
+			Thread t1 = new Thread(n);
+			t1.start();
+		} else if (gameType.equals("multi")) {
+			Scanner s = new Scanner(System.in);
+			System.out.println("What is the IP Address");
+			while (true) {
+				if (ip.length() > 0) {
+					break;
+				}
+				ip = s.nextLine();
+			}
+			System.out.println(ip);
+			n = new Server("client", ip);
+			Thread t1 = new Thread(n);
+			t1.start();
+		} else if (gameType.equals("admin")) {
+			System.out.println("client or server");
+			Scanner s = new Scanner(System.in);
+			while (true) {
+				if (side.equals("client") || side.equals("server")) {
+					break;
+				}
+				side = s.nextLine();
+			}
+			System.out.println("What is the IP Address");
+			while (true) {
+				if (ip.length() > 0) {
+					break;
+				}
+				ip = s.nextLine();
+			}
+			System.out.println(ip);
+			n = new Server(side, ip);
+			Thread t1 = new Thread(n);
+			t1.start();
 		}
 		JFrame f = new JFrame();
 		f.setTitle("Driving Game");
 		f.setSize(t_width, t_height);
 		f.setBackground(Color.BLACK);
 		f.add(this);
-		// setups icon image
 
 		f.setResizable(false);
 		f.addKeyListener(this);
-		// f.add(this);
 
 		t = new Timer(17, this);
 		t.start();
@@ -517,43 +569,29 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 
-		// System.out.println(e.getKeyCode());
-		if (e.getKeyCode() == 39) {
+
+		if (e.getKeyCode() == 39 || e.getKeyCode() == 68) {
 			right = true;
 
 		}
-		if (e.getKeyCode() == 37) {
+		if (e.getKeyCode() == 37 || e.getKeyCode() == 65) {
 			left = true;
 
 		}
 
-		if (e.getKeyCode() == 38) {
+		if (e.getKeyCode() == 38 || e.getKeyCode() == 87) {
 			up = true;
 
 		}
-		if (e.getKeyCode() == 40) {
+		if (e.getKeyCode() == 40 || e.getKeyCode() == 83) {
 			down = true;
 
 		}
+
 		if (e.getKeyCode() == 32) {
-			n.send("p" + forwardPosition + "&" + test);
-		}
+			player.deccelerate();;
 
-		if (e.getKeyCode() == 67) {
-			positions = n.getPositions();
-			Iterator it = positions.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				System.out.println(pair.getKey() + " = +Position: " + pair.getValue());
-			}
-			times = n.getTimes();
-			it = times.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry) it.next();
-				System.out.println(pair.getKey() + " = Time: " + pair.getValue());
-			}
 		}
-
 	}
 
 	@Override
@@ -612,14 +650,13 @@ public class Driver extends JPanel implements ActionListener, KeyListener {
 		}
 
 	}
-	// else if (((System.currentTimeMillis() - start) / 1000) <= 3599)
 
-	public boolean isVari() {
-		return vari;
+	public static String isGameType() {
+		return gameType;
 	}
 
-	public void setVari(boolean vari) {
-		this.vari = vari;
+	public static void setGameType(String gameType) {
+		Driver.gameType = gameType;
 	}
 
 }

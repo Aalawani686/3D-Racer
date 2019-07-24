@@ -1,13 +1,25 @@
+/**
+ * Track1.java
+ * Contains the Polar coordinates and derivatives of a track
+
+ * @author Sahith Konakalla
+ * @author Aniruddh Khanwale
+ * @author Aniruddha Alawani
+ *
+ * @date January 22, 2019
+ *
+ */
+
 import java.awt.geom.Point2D;
 
 public class Track1 extends Road{
-	
+
 	private double endPosition = 4600;
-	
+
 	public double getEndPosition() {
 		return endPosition;
 	}
-	
+
 	public Point2D.Double getPara(double position) {
 		if(position <= 200) {
 			return new Point2D.Double(0, position);
@@ -49,7 +61,7 @@ public class Track1 extends Road{
 			return new Point2D.Double(0, 0);
 		}
 	}
-	
+
 	public Point2D.Double getParaDeriv(double position) {
 		if(position <= 200) {
 			return new Point2D.Double(0, 1);
@@ -91,10 +103,8 @@ public class Track1 extends Road{
 			return new Point2D.Double(0, 0);
 		}
 	}
-	
+
 	public boolean checkIfLap(double position) {
 		return position >= 4600;
 	}
 }
-
-

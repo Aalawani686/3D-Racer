@@ -1,15 +1,29 @@
-
+/**
+ * UsernameEntry.java
+ * Derived from an Oracle Example, takes in the user's username.
+ * If the game mode is admin, it confirms that the admin username is being used.
+ *
+ * @author Aniruddh Khanwale
+ *
+ *
+ * @date Jan 22, 2019
+ *
+ */
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TextDemo extends JPanel implements ActionListener {
+public class UsernameEntry extends JPanel implements ActionListener {
 	protected JTextField textField;
 	protected JTextArea textArea;
 	private final static String newline = "\n";
-	private static boolean isMany = false;
-	public TextDemo() {
+	private static String gameType;
+	/*
+	 * Constructor
+	 * Takes in no parameters, creates the field within which users will type name and where they will see it
+	 */
+	public UsernameEntry() {
 		super(new GridBagLayout());
 
 		textField = new JTextField(20);
@@ -31,28 +45,44 @@ public class TextDemo extends JPanel implements ActionListener {
 		c.weighty = 1.0;
 		add(scrollPane, c);
 	}
-
+	/*
+	 * This is the update method. Checks to see if user has entered a name.
+	 * If the game mode is admin, verifies that the correct passkey is being used
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		String text;
-		System.out.println("hi");
+		// sets a limit on the character length, and initializes the text string
 		if(textField.getText().length() >= 8) {
 			text = textField.getText().substring(0, 8);
 		}else {
 			text = textField.getText();
 		}
-		textArea.append(text + newline);
+		textArea.append(text + newline); // adds the text to viewbox
 		textField.selectAll();
 		// Make sure the new text is visible, even if there
 		// was a selection in the text area.
 		textArea.setCaretPosition(textArea.getDocument().getLength());
-		if (textArea.getDocument().getLength() > 0) {
-			Driver.ready2go = true;
-		}
-		Driver d = new Driver();
-		d.setTest(text);
-		d.setVari(isMany);
 
-		//      
+		//checks game type and initializes driver based on the information
+		if(gameType.equals("single")) {
+			Driver.setGameType("single");
+			Driver d = new Driver();
+			d.setTest(text);
+		}else if(gameType.equals("multi")) {
+			Driver.setGameType("multi");
+			Driver d = new Driver();
+			d.setTest(text);
+		}else if(gameType.equals("admin") && (text.equalsIgnoreCase("anidude2") || text.equalsIgnoreCase("chaosrud") || text.equalsIgnoreCase("Canadian"))) {
+			Driver.setGameType("admin");
+			Driver d = new Driver();
+			d.setTest(text);
+		}else {
+			 textArea.append("Sorry, try again!" + newline);
+		}
+
+
+
+		//
 
 		/**
 		 * Create the GUI and show it. For thread safety, this method should be invoked
@@ -71,7 +101,7 @@ public class TextDemo extends JPanel implements ActionListener {
 		// Make the center component big, since that's the
 		// typical usage of BorderLayout.
 
-		frame.add(new TextDemo(), BorderLayout.LINE_START);
+		frame.add(new UsernameEntry(), BorderLayout.LINE_START);
 
 
 
@@ -90,9 +120,11 @@ public class TextDemo extends JPanel implements ActionListener {
 			}
 		});
 	}
-	public boolean setisMany(boolean multi) {
-		isMany= multi;
-		return isMany;
+	public String setGameType(String txt) {
+		gameType= txt;
+		return gameType;
 	}
-
+	public String getGameType() {
+		return gameType;
+	}
 }

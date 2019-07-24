@@ -1,18 +1,33 @@
 import java.awt.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class Wilkommen implements ActionListener {
-	
+/**
+ * RACING GAME
+ * The following game contains a simple track that players can race on alone or with others on a LAN network.
+ *
+ * The class below sets up the welcome menu, including game modes and a credit screen.
+ * @author Aniruddh Khanwale
+ * @author Sahith Konakalla
+ * @author Aniruddha Alawani
+ *
+ * @date January 22, 2019
+ *
+ */
+public class WelcomeMenu implements ActionListener {
+	// initializes menu and JFrame settings
 	final static boolean shouldFill = true;
 	final static boolean shouldWeightX = true;
 	final static boolean RIGHT_TO_LEFT = false;
-	static TextDemo txt = new TextDemo();
-
+	static UsernameEntry txt = new UsernameEntry();
+	String type;
+	/*
+	 * This is the method that creates the components, including JButtons.
+	 * It also sets up actions and classes to call based on button presses.
+	 */
 	public static void addComponentsToPane(Container pane) {
 		if (RIGHT_TO_LEFT) {
 			pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -24,8 +39,8 @@ public class Wilkommen implements ActionListener {
 			// natural height, maximum width
 			c.fill = GridBagConstraints.HORIZONTAL;
 		}
-
-		JButton credit = new JButton("Credits");
+		// The credit Button calls the Credits class when clicked.
+		final JButton credit = new JButton("Credits");
 		if (shouldWeightX) {
 			c.weightx = 1.0;
 		}
@@ -42,7 +57,12 @@ public class Wilkommen implements ActionListener {
 			}
 		});
 
-		JButton multi = new JButton("Multiplayer ");
+		/*The multi JButton calls the usernameEntry class when clicked,
+		 * creating a game where the user plays as a client
+		 *
+		 * */
+
+		final JButton multi = new JButton("Multiplayer ");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1.0;
 		c.gridx = 1;
@@ -52,18 +72,16 @@ public class Wilkommen implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
 				if (multi.isEnabled()) {
 					txt.createAndShowGUI();
-					txt.setisMany(true);
+					txt.setGameType("multi");
 				}
 			}
 		});
-//    button = new JButton("Button 3");
-//    c.fill = GridBagConstraints.HORIZONTAL;
-//    c.weightx = 0.5;
-//    c.gridx = 2;
-//    c.gridy = 0;
-//    pane.add(button, c);
+		/*The single JButton calls the usernameEntry class when clicked,
+		 * creating a game where the user plays as a server, alone.
+		 *
+		 * */
 
-		JButton single = new JButton("Single Player");
+		final JButton single = new JButton("Single Player");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 40; // make this component tall
 		c.weightx = 0.0;
@@ -75,11 +93,16 @@ public class Wilkommen implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
 				if (single.isEnabled()) {
 					txt.createAndShowGUI();
+					txt.setGameType("single");
 				}
 			}
 		});
+		/*
+		 * The quit JButton exits the program.
+		 *
+		 * */
 
-		JButton quit = new JButton("Quit");
+		final JButton quit = new JButton("Quit");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 0; // reset to default
 		c.weighty = 1.0; // request any extra vertical space
@@ -93,6 +116,30 @@ public class Wilkommen implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
 				if (quit.isEnabled()) {
 					System.exit(0);
+				}
+			}
+		});
+
+		/*The admin JButton calls the usernameEntry class when clicked,
+		 * creating a game where the user plays as a server and manages other players.
+		 *
+		 * */
+
+		final JButton admin = new JButton("Admin");
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 0; // reset to default
+		c.weighty = 1.0; // request any extra vertical space
+		c.anchor = GridBagConstraints.PAGE_END; // bottom of space
+		c.insets = new Insets(10, 0, 0, 0); // top padding
+		c.gridx = 0; // aligned with button 2
+		c.gridwidth = 1; // 2 columns wide
+		c.gridy = 2; // third row
+		pane.add(admin, c);
+		admin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (admin.isEnabled()) {
+					txt.createAndShowGUI();
+					txt.setGameType("admin");
 				}
 			}
 		});
@@ -118,9 +165,9 @@ public class Wilkommen implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		
-		
-		
+
+
+
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -135,6 +182,6 @@ public class Wilkommen implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 
 }
