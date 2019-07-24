@@ -1,6 +1,9 @@
 # APCS-Q2-Project
 
-By: Rudy, Sahith, and Andy
+Contributors
+* Aniruddha Alawani
+* Sahith Konakalla
+* Aniruddh Khanwale
 
 Description -
 A 3D perspective bike racing game that incorporates multi-client servers
